@@ -41,7 +41,8 @@ public class Restaurante {
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne //por padrão tudo que for to one sera carregado com a estrategia eager loading
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
@@ -56,11 +57,11 @@ public class Restaurante {
 	
 	@JsonIgnore
 	@UpdateTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
+	@Column(nullable = false, columnDefinition = "datetime") 
 	private LocalDateTime dataAtualizacao;
 	
 	@JsonIgnore
-	@ManyToMany
+	@ManyToMany //tudo que termina com to many utiliza a estrategia lazy loadinga(carregamento preguiçoso)
 	@JoinTable(name = "restaurante_forma_pagamento" , 
 	joinColumns = @JoinColumn(name = "restaurante_id" ),
 	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
