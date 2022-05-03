@@ -45,7 +45,7 @@ public class Restaurante {
 	
 	//@JsonIgnore
 	@JsonIgnoreProperties("hibernateLazyInitializer")
-	@ManyToOne(fetch = FetchType.LAZY) //por padrão tudo que for to one sera carregado com a estrategia eager loading
+	@ManyToOne //(fetch = FetchType.LAZY) //por padrão tudo que for to one sera carregado com a estrategia eager loading
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
@@ -53,7 +53,7 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
-	@JsonIgnore
+	@JsonIgnore 
 	@CreationTimestamp
 	@Column(nullable = false,  columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
