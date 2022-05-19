@@ -18,7 +18,7 @@ public interface RestauranteRepository
 
 	List<Restaurante> queryByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 	
-	@Query("from Restaurante r join fetch r.cozinha join fetch r.formasPagamento")
+	@Query("from Restaurante r join fetch r.cozinha")
 	List<Restaurante> findAll();
 	
 //	@Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
