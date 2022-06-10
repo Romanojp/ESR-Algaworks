@@ -1,15 +1,11 @@
 package com.algaworks.algafood.api.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.exceptionHandler.Problema;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -83,29 +77,6 @@ public class CidadeController {
 	}
 	
 	
-	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> tratarEntidadeNaoEncontradoException(EntidadeNaoEncontradaException e){
-		
-		Problema problema = Problema.builder()
-				.dataHora(LocalDateTime.now())
-				.mensagem(e.getMessage()).build();
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(problema);
-		
-	}
-	
-	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> tratarNegocioException(EntidadeNaoEncontradaException e){
-		
-		Problema problema = Problema.builder()
-				.dataHora(LocalDateTime.now())
-				.mensagem(e.getMessage()).build();
-		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(problema);
-		
-	}
-	
+
 	
 }
