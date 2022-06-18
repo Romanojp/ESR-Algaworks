@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
@@ -26,6 +27,36 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	
+	
+	public ResponseEntity<Object>handleUncauth(Exception ex, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+		String detail = String.format("Ocorreu um erro inesperado no sistema,"
+				+ "entre em contato com o administrador do sistema");
+		ex.printStackTrace();
+		
+		
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+		
+		
+		
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		 ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+		 String detail = String.format("O recurso %s , que voce tentou acessar, é inexistente", ex.getRequestURL());
+		 
+		 
+		 Problem problem = createProblemBuilder(status, problemType, detail).build();
+		 
+		 
+		 
+		return handleExceptionInternal(ex, problem , headers, status, request);
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
@@ -110,7 +141,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 		String detail = e.getMessage();
 
 		Problem problem = createProblemBuilder(status, problemType, detail).build();
