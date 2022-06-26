@@ -16,11 +16,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.algaworks.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,15 +41,25 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	
+/*	https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints*/
+	
+	
+//	@NotNull
+//	@NotEmpty
+	@NotBlank(groups = Groups.CadastroRestaurante.class)
 	@Column(nullable = false)
 	private String nome;
 	
+	//@DecimalMin("1")
+	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
 	//@JsonIgnore
+	@Valid
 	@JsonIgnoreProperties("hibernateLazyInitializer")
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 	@ManyToOne //(fetch = FetchType.LAZY) //por padrão tudo que for to one sera carregado com a estrategia eager loading
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
