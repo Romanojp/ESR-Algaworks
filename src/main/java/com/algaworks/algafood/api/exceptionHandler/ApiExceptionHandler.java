@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,29 +38,35 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public static final String MSG_DADOS_INVALIDOS = "Um ou mais campos estão inválidos. "
 			+ "Faça o preenchimento correto e tente novamente";
 	
+	@Autowired
+	private MessageSource messageSource;
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
-		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
-		String detail =MSG_DADOS_INVALIDOS;
-		
-	     BindingResult bindingResult = ex.getBindingResult();
-		
-		List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
-				.map(fieldError -> Problem.Field.builder()
-						.name(fieldError.getField())
-						.userMessage(fieldError.getDefaultMessage())
-						.build())
-				.collect(Collectors.toList());
-				
-		
-		Problem problem = createProblemBuilder(status, problemType, detail)
-				.userMessage(detail)
-				.fields(problemFields)
-				.build();
-		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+	    ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+	    String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+	    
+	    BindingResult bindingResult = ex.getBindingResult();
+	    
+	    List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
+	    		.map(fieldError -> {
+	    			String message = messageSource.getMessage(fieldError,LocaleContextHolder.getLocale() );
+	    			
+	    			return Problem.Field.builder()
+	    				.name(fieldError.getField())
+	    				.userMessage(message)
+	    				.build();
+	    		})
+	    		.collect(Collectors.toList());
+	    
+	    Problem problem = createProblemBuilder(status, problemType, detail)
+	        .userMessage(detail)
+	        .fields(problemFields)
+	        .build();
+	    
+	    return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
 	public ResponseEntity<Object>handleUncauth(Exception ex, WebRequest request) {

@@ -7,6 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.groups.ConvertGroup;
+
+import com.algaworks.algafood.Groups;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,6 +30,8 @@ public class Cidade {
 	private String nome;
 	
 	@ManyToOne
+	@Valid
+	@ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
 	@JoinColumn(nullable = false)
 	private Estado estado;
 
