@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.groups.ConvertGroup;
 
-import com.algaworks.algafood.Groups;
+import com.algaworks.algafood.core.validation.Groups;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import lombok.Data;
