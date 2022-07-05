@@ -2,7 +2,8 @@ package com.algaworks.algafood;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.hibernate.exception.ConstraintViolationException;
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CadastroCozinhaIntegrationTests {
+public class CadastroCozinhaIT {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
@@ -37,15 +38,14 @@ public class CadastroCozinhaIntegrationTests {
 		assertThat(novaCozinha.getId()).isNotNull();
 		
 	}
-
-	@Test (expected = ConstraintViolationException.class)
-	public void deveFalhar_quandoCadastrarCozinhaSemNome() {
+	
+	@Test(expected = ConstraintViolationException.class)
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 		
 		novaCozinha = cadastroCozinha.salvar(novaCozinha);
-		}
-	
+	}
 
 	@Test(expected = EntidadeEmUsoException.class)
 	public void deveFalhar_QuandoExcluirCozinhaEmUso() {

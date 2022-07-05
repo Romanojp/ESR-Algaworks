@@ -32,7 +32,7 @@ public class Cozinha {
 	private Long id;
 	
 	@NotBlank
-	@NotNull
+	//@NotNull
 	@Column(nullable = false)
 	private String nome;
 	
