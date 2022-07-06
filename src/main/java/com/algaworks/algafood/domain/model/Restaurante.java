@@ -63,10 +63,10 @@ public class Restaurante {
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
-	//@JsonIgnore
+	
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	@JsonIgnoreProperties("hibernateLazyInitializer")
+	@JsonIgnoreProperties(value = "nome", allowGetters = true)
 	@NotNull
 	@ManyToOne //(fetch = FetchType.LAZY) //por padrão tudo que for to one sera carregado com a estrategia eager loading
 	@JoinColumn(name = "cozinha_id", nullable = false)
